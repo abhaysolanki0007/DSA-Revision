@@ -38,29 +38,33 @@
 38        int n = nums.length;
 39        Arrays.sort(nums);
 40
-41        int freq[] = new int[100001];
-42        for (int x : nums) freq[x]++;
-43
-44        int res = 0;
-45
-46        for (int i = 1; i < 100001; i++) {
-47
-48            int ind = find(nums, i, k);      // last <= i+k
-49            int ind2 = find2(nums, i, -k);   // first >= i-k
+41        // int freq[] = new int[100001];
+42        HashMap<Integer,Integer>map=new HashMap<>();
+43        for (int x : nums) map.put(x,map.getOrDefault(x,0)+1);
+44
+45        int res = 0;
+46        if(k==0||numOperations==0) return Collections.max(map.values());
+47        // if() return Collections.max(map.values());
+48        for (int i = 0; i < n; i++) {
+49            for(int j=-k;j<=k;j+=k){
 50
-51            if (ind == -1 || ind2 == n || ind < ind2) continue;
-52
-53            int diff = ind - ind2 + 1;
-54
-55            if (freq[i] == 0) {
-56                int ans = Math.min(diff, numOperations);
-57                res = Math.max(res, ans);
-58            } else {
-59                int ans = Math.min(diff - freq[i], numOperations);
-60                res = Math.max(res, freq[i] + ans);
-61            }
-62        }
-63
-64        return res;
-65    }
-66}
+51            int ind = find(nums, nums[i]+j, k);      // last <= i+k
+52            int ind2 = find2(nums, nums[i]+j, -k);   // first >= i-k
+53
+54            if (ind == -1 || ind2 == n || ind < ind2) continue;
+55
+56            int diff = ind - ind2 + 1;
+57
+58            if (!map.containsKey(nums[i]+j)) {
+59                int ans = Math.min(diff, numOperations);
+60                res = Math.max(res, ans);
+61            } else {
+62                int ans = Math.min(diff - map.get(nums[i]+j), numOperations);
+63                res = Math.max(res, map.get(nums[i]+j) + ans);
+64            }
+65            }
+66        }
+67
+68        return res;
+69    }
+70}
