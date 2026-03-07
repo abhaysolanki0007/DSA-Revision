@@ -1,54 +1,59 @@
 1class Solution {
-2    public int maxi=(int)(1e9);
-3    public String s;
-4    public int t=1;
-5    public int flips(int i,int parity,int jump,int dp[][][]){
-6      if(i==s.length()){
-7           if(parity!=t) return maxi;
-8           return 0;
-9        }
-10        if(i>s.length()){
-11            return 0;
-12        }
-13        if (dp[i][parity][jump]!=-1) return dp[i][parity][jump];
-14        int a=maxi,b=maxi,c=maxi;
-15        if(s.charAt(i)=='1'){
-16            if(parity==0){
-17                a=1+flips(i+1,1,jump,dp);
-18            }
-19            else a=flips(i+1,0,jump,dp);
-20        }
-21        else{
-22            if(parity==1){
-23                b=1+flips(i+1,0,jump,dp);
-24            }
-25             else b=flips(i+1,1,jump,dp);
-26        }
-27        if(jump<1){
-28            c=flips(i+1,parity,jump+1,dp);
-29        }
-30        return dp[i][parity][jump]=Math.min(c,Math.min(a,b));
+2    public int minFlips(String s) {
+3        int n = s.length(), ans = n;
+4        int arr1[][] = new int[n][2];
+5        int cur = 0, flips = 0;
+6        s=s+s;
+7
+8        // for (int i = n - 1; i >= 0; i--) {
+9        //     int ch = s.charAt(i) - '0';
+10        //     if (ch != cur) flips++;
+11
+12        //     if (cur == 0) arr1[i][0] = flips;
+13        //     else arr1[i][1] = flips;
+14
+15        //     cur = (cur + 1) % 2;
+16        // }
+17
+18        // cur = 1; flips = 0;
+19        // for (int i = n - 1; i >= 0; i--) {
+20        //     int ch = s.charAt(i) - '0';
+21        //     if (ch != cur) flips++;
+22
+23        //     if (cur == 0) arr1[i][0] = flips;
+24        //     else arr1[i][1] = flips;
+25
+26        //     cur = (cur + 1) % 2;
+27        // }
+28
+29        // case when no rotation
+30        // ans = Math.min(arr1[0][0], arr1[0][1]);
 31
-32    }
-33    public int minFlips(String S) {
-34        s=S;
-35        
-36        int n=s.length(),ans=n,c=0;
-37        int dp[][][]=new int[n][2][2];
-38         for (int i = 0; i < n; i++) {
-39            for (int j = 0; j < 2; j++) {
-40                Arrays.fill(dp[i][j], -1);
-41            }
-42        }
-43        
-44        ans=Math.min(ans,flips(0,1,0,dp));
-45         for (int i = 0; i < n; i++) {
-46            for (int j = 0; j < 2; j++) {
-47                Arrays.fill(dp[i][j], -1);
-48            }
-49        }
-50        t=0;
-51         ans=Math.min(ans,flips(0,0,0,dp));
-52        return ans;
-53    }
-54}
+32        flips = 0;
+33        cur = 0;
+34        HashMap<Integer,Integer>map=new HashMap<>();
+35        for (int i = 0; i < 2*n; i++) {
+36            int ch = s.charAt(i) - '0';
+37            if (ch != cur) flips++;
+38           if(i>=n){
+39            ans=Math.min(ans,flips-map.get(i-n));
+40           }
+41           map.put(i,flips);
+42            cur = (cur + 1) % 2;
+43        }
+44        map.clear();
+45        cur = 1; flips = 0;
+46
+47        for (int i = 0; i < 2*n; i++) {
+48            int ch = s.charAt(i) - '0';
+49            if (ch != cur) flips++;
+50           if(i>=n){
+51            ans=Math.min(ans,flips-map.get(i-n));
+52           }
+53            map.put(i,flips);
+54            cur = (cur + 1) % 2;
+55        }
+56
+57        return ans;
+58    }
+59}
