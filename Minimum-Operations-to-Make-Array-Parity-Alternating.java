@@ -1,58 +1,60 @@
-1import java.util.*;
-2
-3class Solution {
-4
-5    public int[] solve(int[] nums, boolean even) {
-6         List<Integer> list=new ArrayList<>();
-7        int op = 0;
-8        int max= Integer.MIN_VALUE;
-9        int min = Integer.MAX_VALUE;
-10        for (int num : nums) {
-11            if ((num % 2 != 0 && even) || (num % 2 == 0 && !even)) {
-12                op++;
-13               list.add(num);
-14            }
-15            else{
-16            max=Math.max(max,num);
-17            min=Math.min(min,num);
-18            }
-19            even = !even;
-20        }
-21        
-22        Collections.sort(list);
-23        int size=list.size();
-24        if(size==0){
-25              if(max-min==0)  return new int[]{op,1};
-26             return new int[]{op,max-min};
-27        }
-28         max= Math.max(max,list.get(size-1)-1);
-29          min=Math.min(min,list.get(0)+1);
-30          if(max-min==0)  return new int[]{op,1};
-31        return new int[]{op,max-min};
-32        
-33    }
-34
-35    public int[] makeParityAlternating(int[] nums) {
-36        int n = nums.length;
-37
-38        // Case when n == 1
-39        if (n == 1) return new int[]{0, 0};
-40
-41        // Case when all elements are same
-42        Set<Integer> set = new HashSet<>();
-43        for (int x : nums) set.add(x);
-44
-45        if (set.size() == 1) {
-46            return new int[]{n / 2, 1};
-47        }
-48
-49      int res1[]= solve(nums, false); // start with odd index even = false
-50        int res2[] = solve(nums, true);  // start with even index even = true
-51
-52        if (res1[0] == res2[0]) {
-53            return res1[1] < res2[1] ? res1 : res2;
-54        }
-55
-56        return res1[0] < res2[0] ? res1 : res2;
-57    }
-58}
+1class Solution {
+2    public boolean allequal(int nums[]){
+3        int st=nums[0];
+4        for(int a:nums){
+5            if(a!=st) return false;
+6        }
+7        return true;
+8    }
+9    public int maxi=(int)(1e9);
+10    public int[] makeParityAlternating(int[] nums) {
+11        int parity=0,n=nums.length;
+12        if(n==1) return new int[]{0,0};
+13        if(allequal(nums)) return new int[]{
+14            n/2,1};
+15        int max=-maxi,min=maxi,res1=n+1,res=maxi;
+16        List<Integer>list=new ArrayList<>();
+17        for(int i=0;i<n;i++){
+18            int cur=nums[i];
+19            if((Math.abs(nums[i])%2)!=parity) list.add(cur);
+20            else{
+21                max=Math.max(cur,max);
+22                 min=Math.min(cur,min);
+23            }
+24            parity=(parity+1)%2;
+25        }
+26        Collections.sort(list);
+27        int m=list.size();
+28        if(m>0){
+29          max=Math.max(list.get(m-1)-1,max);
+30            min=Math.min(list.get(0)+1,min);
+31        }
+32             res1=list.size();
+33             res=max-min;
+34        parity=1;list.clear();
+35        max=-maxi;min=maxi;
+36         for(int i=0;i<n;i++){
+37            int cur=nums[i];
+38            if((Math.abs(nums[i])%2)!=parity) list.add(cur);
+39            else{
+40                max=Math.max(cur,max);
+41                 min=Math.min(cur,min);
+42            }
+43            parity=(parity+1)%2;
+44        }
+45        Collections.sort(list);
+46        m=list.size();
+47        if(m>0){
+48          max=Math.max(list.get(m-1)-1,max);
+49            min=Math.min(list.get(0)+1,min);
+50        }
+51        if(list.size()<=res1){
+52             if(list.size()==res1)  res=Math.min(res,max-min);
+53           else res=Math.max(0,max-min);
+54             res1=Math.min(res1,list.size());
+55            
+56        }
+57        if(res<0)  return new int []{res1,0};
+58        return new int []{res1,res};
+59    }
+60}
