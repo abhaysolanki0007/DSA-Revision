@@ -20,7 +20,7 @@
 20    }
 21    public int maxPathScore(int[][] grid, int k) {
 22        int n=grid.length,m=grid[0].length;
-23        k=Math.min(k,400);
+23        k=Math.min(k,150);
 24        dp=new int[n][m][k+1];
 25        for (int[][] mat : dp) {
 26    for (int[] row : mat) {
