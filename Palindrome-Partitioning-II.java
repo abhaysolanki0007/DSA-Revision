@@ -1,27 +1,42 @@
 1class Solution {
-2     public boolean is(String s1,int start,int end){
-3       while (start <= end) {
-4            if (s1.charAt(start++) != s1.charAt(end--))
-5                return false;
-6        }
-7        return true;
-8    }
-9    public int f(int id,String s,int dp[]){
-10        if(id==s.length()) return 0;
-11        int a=Integer.MAX_VALUE;
-12        if(dp[id]!=-1) return dp[id];
-13        for(int i=id;i<s.length();i++){
-14            if(is(s,id,i)){
-15                a=Math.min(a,1+f(i+1,s,dp));
-16            }
-17        }
-18        return dp[id]=a;
-19    }
-20    public int minCut(String s) {
-21        int n= s.length();
-22        int dp[]=new int [n];
-23       
-24        Arrays.fill(dp,-1);
-25       return f(0,s,dp)-1;
-26    }
-27}
+2    public int max=(int)(1e9);
+3    public int pali[][];
+4    public Integer dp[][];
+5    public int f(int i,int j,String s){
+6        int n=s.length();
+7        if(i==n) return 0;
+8        if(j==n) return max;
+9        if(dp[i][j]!=null) return dp[i][j];
+10        int ans=f(i,j+1,s);
+11        if(pali[i][j]==1){
+12             ans=Math.min(ans,1+f(j+1,j+1,s));
+13        }
+14        return dp[i][j]=ans;
+15    }
+16    public int minCut(String s) {
+17          int n=s.length();
+18        pali=new int[n][n];
+19        dp=new Integer[n][n];
+20        for(int i=0;i<n;i++){
+21            int j=i,k=i;
+22            while(j>=0&&k<n){
+23                if(s.charAt(j)!=s.charAt(k)){
+24                    break;
+25                }
+26                pali[j][k]=1;
+27                j--;k++;
+28            }
+29        }
+30         for(int i=0;i<n;i++){
+31            int j=i,k=i+1;
+32            while(j>=0&&k<n){
+33                if(s.charAt(j)!=s.charAt(k)){
+34                    break;
+35                }
+36                pali[j][k]=1;
+37                j--;k++;
+38            }
+39        }
+40        return f(0,0,s)-1;
+41    }
+42}
