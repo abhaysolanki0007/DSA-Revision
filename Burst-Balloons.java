@@ -1,26 +1,23 @@
 1class Solution {
-2    public int dp[][];
-3    public int f(int i,int j,int nums[]){
-4        if(i>j) return 0;
-5        int sum=0;
-6        if(dp[i][j]!=-1) return dp[i][j];
-7        for(int ind=i;ind<=j;ind++){
-8            sum=Math.max(sum,nums[ind]*nums[i-1]*nums[j+1]+f(i,ind-1,nums)+f(ind+1,j,nums));
-9        }
-10        return dp[i][j]=sum;
-11    }
-12    public int maxCoins(int[] nums) {
-13        int n=nums.length;
-14        int arr[]=new int[n+2];
-15        dp=new int[n+2][n+2];
-16        for(int row[]:dp){
-17            Arrays.fill(row,-1);
-18        }
-19        arr[0]=1;
-20        arr[n+1]=1;
-21        for(int i=1;i<=n;i++){
-22            arr[i]=nums[i-1];
-23        }
-24        return f(1,n,arr);
-25    }
-26}
+2    public Integer dp[][];
+3    public int coins(int i,int j,int nums[]){
+4          int n=nums.length;
+5          if(i>j) return 0;
+6          int ans=0;
+7          if( dp[i][j]!=null) return  dp[i][j];
+8          for(int id=i;id<=j;id++){
+9            ans=Math.max(ans,nums[id]*nums[i-1]*nums[j+1]+coins(i,id-1,nums)+coins(id+1,j,nums));
+10          }
+11          return dp[i][j]=ans;
+12    }
+13    public int maxCoins(int[] nums1) {
+14        int n=nums1.length;
+15        dp=new Integer[n+2][n+2];
+16        int nums[]=new int[n+2];
+17        nums[0]=nums[n+1]=1;
+18        for(int i=1;i<=n;i++){
+19            nums[i]=nums1[i-1];
+20        }
+21        return coins(1,n,nums);
+22    }
+23}
